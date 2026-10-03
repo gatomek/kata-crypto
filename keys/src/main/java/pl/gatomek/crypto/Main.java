@@ -12,7 +12,7 @@ import java.util.Base64;
 // todo: format PKCS#8 vs. X.509
 // todo: algorithm DSA - Digital Signature Algorithm - any other algos? DSA, RSA
 // todo: how can i check private and public keys?
-// todo: saving kyes to files
+// todo: saving keys to files
 // todo: check with external tool correctness of generating the key pair
 
 // pem - privacy-enhanced mail
