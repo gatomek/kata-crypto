@@ -18,12 +18,12 @@ import java.util.Base64;
 
 // [x] todo: saving keys to files
 
-public class Main {
-    static void main() throws NoSuchAlgorithmException, IOException {
+public class KeyPairGen {
+    private static void main() throws NoSuchAlgorithmException, IOException {
         generateKeys("RSA", 4096);
     }
 
-    private static void generateKeys(String algorithm, int keySize) throws NoSuchAlgorithmException, IOException {
+    public static void generateKeys(String algorithm, int keySize) throws NoSuchAlgorithmException, IOException {
         IO.println(algorithm + " Keys Generator (" + keySize + ")");
 
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance(algorithm);
