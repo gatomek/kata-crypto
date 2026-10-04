@@ -6,24 +6,22 @@ import javax.crypto.NoSuchPaddingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
 public class Chat {
     protected static Map<String, PublicKey> publicKeyRepo = new HashMap<>();
-    protected static Map<String, User> userRepo = new HashMap<>();
-    protected static Deque<Message> channel = new ArrayDeque<>();
+    protected static Map<String, User> onlineUserRepo = new HashMap<>();
 
-    protected static void register(User user) {
+    protected static void logIn(User user) {
         publicKeyRepo.put(user.getName(), user.getPublicKey());
-        userRepo.put(user.getName(), user);
+        onlineUserRepo.put(user.getName(), user);
     }
 
-    protected static void sendMessage(Message msg) {
-        channel.add(msg);
+    protected static void sendMessage(Message msg) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
+        User user = onlineUserRepo.get(msg.to);
+        user.receiveMessage(msg);
     }
 
     protected static PublicKey findPublicKeyByUserName(String name) {
@@ -34,14 +32,11 @@ public class Chat {
         IO.println("Welcome to secure chat!");
 
         User ala = new User("ala");
-        User tomi = new User("tomi");
+        User bob = new User("bob");
 
-        register(ala);
-        register(tomi);
+        logIn(ala);
+        logIn(bob);
 
-        Message msg = ala.makeSignedMessage("tomi", "How are you?");
-        IO.println(msg);
-
-        sendMessage(msg);
+        sendMessage(ala.makeSignedMessage(bob.getName(), "How are you?"));
     }
 }
