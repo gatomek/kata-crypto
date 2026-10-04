@@ -14,9 +14,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Getter
-@Setter
 public class User extends Actor {
-    private String name;
+    private final String name;
 
     public User(String name) throws NoSuchAlgorithmException {
         init();
@@ -25,8 +24,10 @@ public class User extends Actor {
 
     public Message makeSignedMessage(String to, String content) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
 
+        String payload = to + "|" + name + "|" + content;
+
         MessageDigest digester = MessageDigest.getInstance("SHA-256");
-        byte[] digest = digester.digest(content.getBytes(StandardCharsets.UTF_8));
+        byte[] digest = digester.digest(payload.getBytes(StandardCharsets.UTF_8));
 
         Cipher encryptCipher = Cipher.getInstance( "RSA");
         encryptCipher.init(Cipher.ENCRYPT_MODE, keyPair.getPrivate());
