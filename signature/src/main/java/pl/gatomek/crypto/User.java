@@ -50,6 +50,5 @@ public class User extends Actor {
         byte[] digest = digester.digest(payload.getBytes(StandardCharsets.UTF_8));
 
         boolean verified = Arrays.equals(digestCandidate, digest);
-        String result = "ok";
     }
 }
