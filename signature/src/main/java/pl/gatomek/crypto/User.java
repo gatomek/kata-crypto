@@ -35,26 +35,20 @@ public class User extends Actor {
         byte[] bytes = encryptCipher.doFinal(digest);
         String signature = Base64.getEncoder().encodeToString(bytes);
 
-        return Message.builder()
-                .from(name)
-                .to(to)
-                .content(content)
-                .signature(signature)
-                .hashAlgorithm("SHA-256")
-                .build();
+        return new Message( name, to, content, signature, "SHA-256");
     }
 
     public void receiveMessage(Message msg) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-        byte[] decode = Base64.getDecoder().decode(msg.signature);
-        PublicKey publicKey = Chat.findPublicKeyByUserName(msg.from);
+        byte[] sign = Base64.getDecoder().decode(msg.signature());
+        PublicKey publicKey = Chat.getPublicKeyOfUserName(msg.from());
         Cipher encryptCipher = Cipher.getInstance("RSA");
         encryptCipher.init(Cipher.DECRYPT_MODE, publicKey);
-        byte[] bytes = encryptCipher.doFinal(decode);
+        byte[] digestCandidate = encryptCipher.doFinal(sign);
 
-        String payload = msg.to + "|" + msg.from + "|" + msg.content;
-        MessageDigest digester = MessageDigest.getInstance(msg.hashAlgorithm);
+        String payload = msg.to() + "|" + msg.from() + "|" + msg.content();
+        MessageDigest digester = MessageDigest.getInstance(msg.hashAlgorithm());
         byte[] digest = digester.digest(payload.getBytes(StandardCharsets.UTF_8));
 
-        boolean verified = Arrays.equals(bytes, digest);
+        boolean verified = Arrays.equals(digestCandidate, digest);
     }
 }

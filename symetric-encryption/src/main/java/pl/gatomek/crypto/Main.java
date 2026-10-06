@@ -28,6 +28,8 @@ import java.util.Base64;
  * gcm - galois/counter mode
  */
 
+// todo: AES -> AES/GCM/NoPadding ?
+
 public class Main {
 
     private static SecretKey makeSecretKey() throws NoSuchAlgorithmException {

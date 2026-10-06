@@ -20,16 +20,16 @@ public class Chat {
     }
 
     protected static void sendMessage(Message msg) throws NoSuchPaddingException, IllegalBlockSizeException, NoSuchAlgorithmException, BadPaddingException, InvalidKeyException {
-        User user = onlineUserRepo.get(msg.to);
+        User user = onlineUserRepo.get(msg.to());
         user.receiveMessage(msg);
     }
 
-    protected static PublicKey findPublicKeyByUserName(String name) {
+    protected static PublicKey getPublicKeyOfUserName(String name) {
         return Optional.ofNullable(publicKeyRepo.get(name)).orElseThrow();
     }
 
     static void main() throws NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        IO.println("Welcome to secure chat!");
+        IO.println("Welcome to signed chats!");
 
         User ala = new User("ala");
         User bob = new User("bob");
